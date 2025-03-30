@@ -1,0 +1,38 @@
+/* 全局样式 */
+body {
+    background-color: #f4f4f9;
+    font-family: 'Arial', sans-serif;
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+}
+
+button {
+    width: 100px;
+    height: 100px;
+    font-size: 36px;
+    font-weight: bold;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    background-color: #fff;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.1);
+}
+
+button:disabled {
+    background-color: #e0e0e0;
+    cursor: not-allowed;
+}
+
+div[data-testid="stMarkdownContainer"] p {
+    font-size: 18px;
+    text-align: center;
+    color: #555;
+}

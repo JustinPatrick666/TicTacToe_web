@@ -1,6 +1,14 @@
 import streamlit as st
 from time import time
 
+# 自定义 CSS 样式
+def local_css(file_name):
+    with open(file_name) as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
+# 加载本地 CSS 文件
+local_css("style.css")
+
 # 初始化游戏状态
 class TicTacToe:
     def __init__(self):
@@ -86,16 +94,20 @@ def best_move(game):
 
 # Streamlit 应用
 def main():
-    st.title("井字棋游戏 🎮")
-    st.write("与 AI 对弈，点击空格进行操作！")
+    st.title("井字棋 🎮")
+    st.markdown("""
+    <div style="text-align: center; font-size: 20px;">
+        和 AI 对弈，点击空格开始操作！
+    </div>
+    """, unsafe_allow_html=True)
 
     if "game" not in st.session_state:
         st.session_state.game = TicTacToe()
 
     game = st.session_state.game
 
-    # 显示棋盘
-    cols = st.columns(3)
+    # 创建棋盘布局
+    cols = st.columns([1, 1, 1])
     for i in range(9):
         row, col = divmod(i, 3)
         with cols[col]:
@@ -107,13 +119,13 @@ def main():
                         ai_move = best_move(game)
                         game.make_move(ai_move, game.ai)
 
-    # 检查游戏结束
+    # 显示游戏结果
     if game.is_winner(game.human):
-        st.success("你赢了！🎉")
+        st.success("🎉 你赢了！🎉")
     elif game.is_winner(game.ai):
-        st.error("AI赢了！🤖（🤲建议多练）")
+        st.error("🤖 AI赢了！🤖（多练练🤲）")
     elif game.is_draw():
-        st.info("平局！🤝")
+        st.info("🤝 平局！🤝")
     else:
         st.write(f"总时间: {game.total_time:.4f}秒")
 
