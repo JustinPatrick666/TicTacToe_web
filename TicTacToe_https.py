@@ -1,13 +1,77 @@
 import streamlit as st
 from time import time
 
-# 自定义 CSS 样式
-def local_css(file_name):
-    with open(file_name) as f:
-        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+# 自定义样式（直接嵌入到代码中）
+def add_custom_styles():
+    st.markdown("""
+    <style>
+    /* 全局样式 */
+    body {
+        background-color: #f4f4f9;
+        font-family: 'Arial', sans-serif;
+    }
 
-# 加载本地 CSS 文件
-local_css("style.css")
+    h1 {
+        color: #333;
+        text-align: center;
+    }
+
+    /* 按钮样式 */
+    div.stButton > button {
+        width: 100%;
+        height: 80px;
+        font-size: 36px;
+        font-weight: bold;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        background-color: #fff;
+        color: #333;
+        transition: all 0.3s ease;
+    }
+
+    div.stButton > button:hover {
+        background-color: #f0f0f0;
+        transform: scale(1.05);
+    }
+
+    div.stButton > button:disabled {
+        background-color: #e0e0e0;
+        cursor: not-allowed;
+    }
+
+    /* 响应式布局 */
+    @media (max-width: 768px) {
+        div.stButton > button {
+            height: 60px;
+            font-size: 24px;
+        }
+    }
+
+    /* 游戏结果提示 */
+    .game-result {
+        font-size: 20px;
+        text-align: center;
+        margin-top: 20px;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .success {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .error {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+
+    .info {
+        background-color: #cce5ff;
+        color: #0c5460;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
 # 初始化游戏状态
 class TicTacToe:
@@ -94,20 +158,21 @@ def best_move(game):
 
 # Streamlit 应用
 def main():
-    st.title("井字棋 🎮")
-    st.markdown("""
-    <div style="text-align: center; font-size: 20px;">
-        和 AI 对弈，点击空格开始操作！
-    </div>
-    """, unsafe_allow_html=True)
+    # 添加自定义样式
+    add_custom_styles()
 
+    # 设置标题
+    st.title("井字棋 🎮")
+    st.markdown('<p style="text-align: center; font-size: 20px;">和 AI 对弈，点击空格开始操作！</p>', unsafe_allow_html=True)
+
+    # 初始化游戏状态
     if "game" not in st.session_state:
         st.session_state.game = TicTacToe()
 
     game = st.session_state.game
 
     # 创建棋盘布局
-    cols = st.columns([1, 1, 1])
+    cols = st.columns(3)
     for i in range(9):
         row, col = divmod(i, 3)
         with cols[col]:
@@ -120,14 +185,23 @@ def main():
                         game.make_move(ai_move, game.ai)
 
     # 显示游戏结果
+    result_class = ""
     if game.is_winner(game.human):
-        st.success("🎉 你赢了！🎉")
+        result_class = "success"
+        result_message = "🎉 你赢了！🎉"
     elif game.is_winner(game.ai):
-        st.error("🤖 AI赢了！🤖（多练练🤲）")
+        result_class = "error"
+        result_message = "🤖 AI赢了！🤖（🤲多练练吧）"
     elif game.is_draw():
-        st.info("🤝 平局！🤝")
+        result_class = "info"
+        result_message = "🤝 平局！🤝"
     else:
-        st.write(f"总时间: {game.total_time:.4f}秒")
+        result_message = f"总时间: {game.total_time:.4f}秒"
+
+    if result_class:
+        st.markdown(f'<div class="game-result {result_class}">{result_message}</div>', unsafe_allow_html=True)
+    else:
+        st.write(result_message)
 
     # 重置按钮
     if st.button("重新开始"):
