@@ -16,17 +16,28 @@ def add_custom_styles():
         text-align: center;
     }
 
+    /* 棋盘容器 */
+    .board-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+        max-width: 300px; /* 限制棋盘总宽度 */
+        margin: 0 auto;
+    }
+
     /* 按钮样式 */
     div.stButton > button {
-        width: 100%;
-        height: 80px;
-        font-size: 36px;
+        width: 80px; /* 按钮宽度 */
+        height: 80px; /* 按钮高度 */
+        font-size: 24px;
         font-weight: bold;
         border: 2px solid #ddd;
-        border-radius: 10px;
+        border-radius: 8px;
         background-color: #fff;
         color: #333;
         transition: all 0.3s ease;
+        margin: 5px; /* 按钮间距 */
     }
 
     div.stButton > button:hover {
@@ -42,14 +53,15 @@ def add_custom_styles():
     /* 响应式布局 */
     @media (max-width: 768px) {
         div.stButton > button {
-            height: 60px;
-            font-size: 24px;
+            width: 60px; /* 手机端按钮宽度 */
+            height: 60px; /* 手机端按钮高度 */
+            font-size: 18px; /* 手机端字体大小 */
         }
     }
 
     /* 游戏结果提示 */
     .game-result {
-        font-size: 20px;
+        font-size: 16px;
         text-align: center;
         margin-top: 20px;
         padding: 10px;
@@ -163,7 +175,7 @@ def main():
 
     # 设置标题
     st.title("井字棋 🎮")
-    st.markdown('<p style="text-align: center; font-size: 20px;">和 AI 对弈，点击空格开始操作！</p>', unsafe_allow_html=True)
+    st.markdown('<p style="text-align: center; font-size: 16px;">和 AI 对弈，点击空格开始操作！</p>', unsafe_allow_html=True)
 
     # 初始化游戏状态
     if "game" not in st.session_state:
@@ -172,6 +184,7 @@ def main():
     game = st.session_state.game
 
     # 创建棋盘布局
+    st.markdown('<div class="board-container">', unsafe_allow_html=True)
     cols = st.columns(3)
     for i in range(9):
         row, col = divmod(i, 3)
@@ -183,6 +196,7 @@ def main():
                     if not game.is_game_over():
                         ai_move = best_move(game)
                         game.make_move(ai_move, game.ai)
+    st.markdown('</div>', unsafe_allow_html=True)
 
     # 显示游戏结果
     result_class = ""
@@ -191,7 +205,7 @@ def main():
         result_message = "🎉 你赢了！🎉"
     elif game.is_winner(game.ai):
         result_class = "error"
-        result_message = "🤖 AI赢了！🤖（🤲多练练吧）"
+        result_message = "🤖 AI赢了！🤖（多练练哈）🤲"
     elif game.is_draw():
         result_class = "info"
         result_message = "🤝 平局！🤝"
